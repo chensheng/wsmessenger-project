@@ -205,7 +205,7 @@ public class MyTextMessageListener extends ClientMessageListener<TextMessage> {
 ```
 
 ### Listen lifecycle
-Lifecycle listeners can be added listen server and client's lifecycles. Developer should implement your own `LifecycleListener`.
+Lifecycle listeners can be added to listen server and client's lifecycles. Developer should implement your own `LifecycleListener`.
 
 In server side, `ServerLifecycleListener` is used to implement. The following is an example:
 ```java
