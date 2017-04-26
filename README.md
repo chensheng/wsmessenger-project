@@ -32,7 +32,7 @@ For client side, you should import `wsmessenger-client`.
 </dependency>
 ```
 
-To create customized messages, you should import `wsmessenger-message`
+To implement customized messages, you should import `wsmessenger-message`
 ```
 <dependency>
   <groupId>space.chensheng.wsmessenger</groupId>
