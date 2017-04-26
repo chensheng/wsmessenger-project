@@ -9,6 +9,7 @@ Wsmessenger is a long connection message middleware based on websocket protocl. 
 * [Implement customized message](#implement-customized-message)
 * [Listen message](#listen-message)
 * [Listen lifecycle](#listen-lifecycle)
+* [Advanced configuration](#advanced-configuration)
 
 ### Import dependencies
 Here we use MAVEN to manage project's dependencies. 
@@ -255,3 +256,29 @@ public class MyClientLifecycleListener extends ClientLifecycleListener {
 
 }
 ```
+
+## Advanced configuration
+There are serveal advanced configurations for server and client.
+
+In server side, you can create a config file named `wsmessenger-server.properties` in your project. It is optional. The following table shows configuration details.
+Config property name|Config property value
+-----|-----
+serverId|Default is `wsmessenger-server`. The server's id. The `serverId` will be set to message when sending message to client.
+serverPort|Default  is `2046`.  The port listened by server.
+pendingClientMaxCount|Default is `100`. Server will keep messages in pending queue for unavailable clients. If unavailable client's size exceed max count, new messages will not keep for new unavailable clients.
+pendingClientMaxMsg|Default is `100`. The max number of messages kept in pending queue for single unavailable client.
+pendingClientTimeoutMillis|Default is `3600000`. Time unit is millisecond. If an unavailable client sitting in pending queue exceeds `pendingClientTimeoutMillis`, it will be removed from the pending queue.
+pendingClientTimeoutCheckerIntervalMinutes|Default is `5`. Time unit is minute. The interval minutes to check whether unavailable clients is timeout or not.
+maxPendingMsg|Default is `1000`. The total number of messages kept in pending queue for all unavailable clients.
+acceptorThreadSize|Default is `1`. The number of threads  to accept connections from clients. One thread is enough.
+ioThreadSize|Default is `4`. The number of threads to read io from clients.
+businessThreadSize|Default is `8`. The number of threads to execute business tasks.
+heartbeatIntervalSeconds|Default is `60`. Time unit is second. The interval seconds to send heartbeat to clients. 
+heartbeatMaxFail|Default is `2`. The max fail times of heartbeat. The long connection to client will be closed if heartbeat fail specific times.
+soBacklog|Default is `3074`. The same as socBacklog in TCP/IP.
+allowHalfClosure|Default is `false`. The same as allowHalfClosure in TCP/IP
+waitingMsgTimoutMillis|Default is `120000`. Time unit is millisecond. The timeout to wait receiver's response for message that needed response. If timeout to wait resposne, the timeout callback will be triggered.
+waitingMsgMaxSize|Default is `1000`. The number of messages kept in waiting response queue. New waiting inforamtion will not be added to waiting queue if waiting size execceds the max size. 
+maxContentLen|Default is `1048576`. Unit is byte. The max size of message.
+maxFrameSize|Default is `1048576`. Unit is byte. The max size of message.
+retryTaskMaxSize|Default if `1000`. The max number of retry tasks kept in retry queue. New retry task will be dropped if the retry queue execceds max size. 
