@@ -6,6 +6,7 @@ Wsmessenger is a long connection message middleware based on websocket protocl. 
 * [Set up server side](#set-up-server-side)
 * [Set up client side](#set-up-client-side)
 * [Send message](#send-message)
+* [Implement customized message](#implement-customized-message)
 
 ### Import dependencies
 Here we use MAVEN to manage project's dependencies. 
@@ -119,3 +120,53 @@ sendWaitingMessageReliably(WsMessage message, String serverId, WaitingCallback c
 sendWaitingMessageReliably(WsMessage message, String serverId, WaitingCallback callback, long timeout)|Send message to server, and waiting for server's response in specific timeout milliseconds. Trigger callback when receiving response or timeout. Add message to pending queue if server is unavailable.
 sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId)|Send message to specific server, and waiting for server's response. Retry 3 times until receiving success response. Add message to pending queue if server is unavailable.
 sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId, int retry)|Send message to specific server, and waiting for server's response. Retry specific times until receiving success response. Add message to pending queue when server is unavailable.
+
+### Implement customized message
+Developer can implement customized message, and send between server and client. To implement a customized message, you should use `WsMessage` and `MessageBody`. The following is an example:
+
+Firstly, implement a customized message body.
+```java
+import space.chensheng.wsmessenger.message.component.MessageBody;
+
+public class UserInfoMessageBody extends MessageBody {
+    private int userId;
+    
+    private String userName;
+    
+    public UserInfoMessageBody(int userId, String userName) {
+        this.userId = userId;
+	this.userName = userName;
+    }
+    
+    public int getUserId() {
+        return userId;
+    }
+    
+    public String getUserName() {
+        return userName;
+    }
+}
+```
+
+Secondly, implement a customized message with the customized message body.
+```java
+import space.chensheng.wsmessenger.message.component.WsMessage;
+import your.package.to.UserInfoMessageBody;
+
+public class UserInfoMessage extends WsMessage<UserInfoMessageBody> {
+    //A non-argument constructor is required.
+    public UserInfoMessage() {
+        this(0, null);
+    }
+    
+    public UserInfoMessage(int userId, String userName) {
+        super(new UserInfoMessageBody(userId, userName));
+    }
+}
+```
+
+Finally, send the customized message.
+```java
+UserInfoMessage message = new UserInfoMessage(123, "wsmessenger");
+client.sendMessage(message, null);
+```
