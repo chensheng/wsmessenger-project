@@ -257,10 +257,10 @@ public class MyClientLifecycleListener extends ClientLifecycleListener {
 }
 ```
 
-## Advanced configuration
+### Advanced configuration
 There are serveal advanced configurations for server and client.
 
-In server side, you can create a config file named `wsmessenger-server.properties` in your project. It is optional. The following table shows configuration details.
+In server side, you can create a config file named `wsmessenger-server.properties` in your project. It is optional. The following table shows configuration details:
 
 property name|property value
 -------------|-------------
@@ -275,11 +275,30 @@ acceptorThreadSize|Default is `1`. The number of threads  to accept connections 
 ioThreadSize|Default is `4`. The number of threads to read io from clients.
 businessThreadSize|Default is `8`. The number of threads to execute business tasks.
 heartbeatIntervalSeconds|Default is `60`. Time unit is second. The interval seconds to send heartbeat to clients. 
-heartbeatMaxFail|Default is `2`. The max fail times of heartbeat. The long connection to client will be closed if heartbeat fail specific times.
+heartbeatMaxFail|Default is `3`. The max fail times of heartbeat. The long connection to client will be closed if heartbeat fail specific times.
 soBacklog|Default is `3074`. The same as socBacklog in TCP/IP.
 allowHalfClosure|Default is `false`. The same as allowHalfClosure in TCP/IP
 waitingMsgTimoutMillis|Default is `120000`. Time unit is millisecond. The timeout to wait receiver's response for message that needed response. If timeout to wait resposne, the timeout callback will be triggered.
 waitingMsgMaxSize|Default is `1000`. The number of messages kept in waiting response queue. New waiting inforamtion will not be added to waiting queue if waiting size execceds the max size. 
+maxContentLen|Default is `1048576`. Unit is byte. The max size of message.
+maxFrameSize|Default is `1048576`. Unit is byte. The max size of message.
+retryTaskMaxSize|Default if `1000`. The max number of retry tasks kept in retry queue. New retry task will be dropped if the retry queue execceds max size. 
+
+
+In client side, you must create a config file named `wsmessenger-client.properties` in your project. It is required. The following table shows configuration details:
+
+property name|property value
+-------------|--------------
+clientId|REQUIRED. The messenger client id. Server will identify different client by `clientId`.
+serverUrl|REQUIRED. The server url client will connect to. Just like this `ws://127.0.0.1:2046`
+ioThreadPoolSize|Default is `1`. The number of threads ro read io from server.
+businessThreadPoolSize|Default is `4`. The number of threads to execute business tasks.
+heartbeatSeconds|Default is `60`. Time unit is second. The interval seconds to send heartbeat to server.
+heartbeatMaxFail|Default is `3`. The max fail times of heartbeat. The long connection to server will be closed if heartbeat fail specific times.
+reconnectMillis|Default is `10000`. Time unit is milliseconds. The interval milliseconds to reconnect server when server is unavailable.
+maxPendingMsg|Default is `1000`. The max number of messages kept in pending queue for unavailable server.
+waitingMsgTimoutMillis|Default is `120000`. Time unit is millisecond. The timeout to wait receiver's response for message that needed response. If timeout to wait resposne, the timeout callback will be triggered.
+waitingMsgMaxSize|Default is `1000`. The max number of messages kept in waiting response queue. New waiting inforamtion will not be added to waiting queue if waiting size execceds the max size. 
 maxContentLen|Default is `1048576`. Unit is byte. The max size of message.
 maxFrameSize|Default is `1048576`. Unit is byte. The max size of message.
 retryTaskMaxSize|Default if `1000`. The max number of retry tasks kept in retry queue. New retry task will be dropped if the retry queue execceds max size. 
