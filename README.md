@@ -5,6 +5,7 @@ Wsmessenger is a long connection message middleware based on websocket protocl. 
 * [Import dependencies](#import-dependencies)
 * [Set up server side](#set-up-server-side)
 * [Set up client side](#set-up-client-side)
+* [Send message](#send-message)
 
 ### Import dependencies
 Here we use MAVEN to manage project's dependencies. 
@@ -76,4 +77,19 @@ WsMessengerClient client = new ClientBootstrap()
             .addMessageListener(new MyTextMessageListener())
             .build();
 client.start();
+```
+
+### Send message
+Server and client can comunicate with each other by sending message. 
+
+In server side, `WsMessengerServer` is used to send message.
+```java
+TextMessage message = new TextMessage("This is a text message sent to client!");
+server.sendMessage(message, clientId);
+```
+
+In client side, `WsMessengerClient` is used to send message.
+```java
+TextMessage message = new TextMessage("This is a text message sent to server!");
+client.sendMessage(message, null);
 ```
