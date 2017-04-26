@@ -104,11 +104,18 @@ sendWaitingMessage(WsMessage message, String clientId, WaitingCallback callback)
 sendWaitingMessage(WsMessage message, String clientId, WaitingCallback callback, long timeout)|Send message to specific client, and waiting for client's response in specific timeout milliseconds. Trigger callback when receiving response or timeout.
 sendWaitingMessageReliably(WsMessage message, String clientId, WaitingCallback callback)|Send message to specific client, and waiting for client's response. Trigger callback when receiving response or timeout. Add message to pending queue if client is unavailable.
 sendWaitingMessageReliably(WsMessage message, String clientId, WaitingCallback callback, long timeout)|Send message to specific client, and waiting for client's response in specific timeout milliseconds. Trigger callback when receiving response or timeout. Add message to pending queue if client is unavailable.
-sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId)|Send message to specific client, and waiting for client's response. Retry 3 times until receiving success response. Add message to pending queue when fail to send.
-sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId, int retry)|Send message to specific client, and waiting for client's response. Retry specific times until receiving success response. Add message to pending queue when fail to send.
+sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId)|Send message to specific client, and waiting for client's response. Retry 3 times until receiving success response. Add message to pending queue if client is unavailable.
+sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId, int retry)|Send message to specific client, and waiting for client's response. Retry specific times until receiving success response. Add message to pending queue if client is unavailable.
 	
 ###### Client side's sender APIs
-API|description(serverId can be null)
+API(serverId is always null)|description
 ---|---
 sendMessage(WsMessage message)|send  message to server
 sendMessage(WsMessage message, String serverId)|send message to server
+sendMessageReliably(WsMessage message, String serverId)|Send message to server, and add message to pending queue if server is unavailable.
+sendWaitingMessage(WsMessage message, String serverId, WaitingCallback callback)|Send message to server, and waiting for server's response. Trigger callback when receiving response or timeout.
+sendWaitingMessage(WsMessage message, String serverId, WaitingCallback callback, long timeout)|Send message to server, and waiting for server's response in specific timeout milliseconds. Trigger callback when receiving response or timeout.
+sendWaitingMessageReliably(WsMessage message, String serverId, WaitingCallback callback)|Send message to server, and waiting for server's response. Trigger callback when receiving response or timeout. Add message to pending queue if server is unavailable.
+sendWaitingMessageReliably(WsMessage message, String serverId, WaitingCallback callback, long timeout)|Send message to server, and waiting for server's response in specific timeout milliseconds. Trigger callback when receiving response or timeout. Add message to pending queue if server is unavailable.
+sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId)|Send message to specific server, and waiting for server's response. Retry 3 times until receiving success response. Add message to pending queue if server is unavailable.
+sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId, int retry)|Send message to specific server, and waiting for server's response. Retry specific times until receiving success response. Add message to pending queue when server is unavailable.
