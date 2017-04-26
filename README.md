@@ -37,7 +37,7 @@ To create customized messages, you should import `wsmessenger-message`
 ```
 
 ### Set up server side
-`ServerBootstrap` is used to set up the server side.
+`ServerBootstrap` is used to set up the server side. The server will listen `2046` port by default.
 
 Simply set up the server side.
 ```java
@@ -45,11 +45,35 @@ WsMessengerServer server = new ServerBootstrap().build();
 server.start();
 ```
 
-If you want to listen server's lifecycle and messages from client, listeners can be added when setting up server side. More informations about listeners will be follow.
+If you want to listen server's lifecycle and received messages, listeners can be added when setting up the server side. 
 ```java
 WsMessengerServer server = new ServerBootstrap()
             .addLifecycleListener(new MyServerLifecycleListener())
-        		.addMessageListener(new MyTextMessageListener())
-        		.build();
+            .addMessageListener(new MyTextMessageListener())
+            .build();
 server.start();
+```
+
+### Set up client side
+`ClientBoostrap` is used to set up the client side. Once client starts, it will establish a long connection to server through websocket protocol.
+
+Before setting up the client side, you should create a config file `wsmessenger-client.properties` in your project. The config should specify `clientId` and `serverUrl`.
+```
+clientId=your-wsmessenger-client-id
+serverUrl=ws://127.0.0.1:2046
+```
+
+Simply set up the client side.
+```java
+WsMessengerClient client = new ClientBootstrap().build();
+client.start();
+```
+
+If you want to listen client's lifecycle and received messages, listeners can be added when setting up the client side.
+```java
+WsMessengerClient client = new ClientBootstrap()
+            .addLifecycleListener(new MyClientLifecycleListener())
+            .addMessageListener(new MyTextMessageListener())
+            .build();
+client.start();
 ```
