@@ -97,9 +97,16 @@ client.sendMessage(message, null);
 ###### Server side's sender APIs
 API|description
 ---|---
-sendMessage(WsMessage message)|send  message to all connected clients
-sendMessage(WsMessage message, String clientId)|send message to specific client
-
+sendMessage(WsMessage message)|Send  message to all connected clients.
+sendMessage(WsMessage message, String clientId)|Send message to specific client.
+sendMessageReliably(WsMessage message, String clientId)|Send message to specific client, and add message to pending queue if client is unavailable.
+sendWaitingMessage(WsMessage message, String clientId, WaitingCallback callback)|Send message to specific client, and waiting for client's response. Trigger callback when receiving response or timeout.
+sendWaitingMessage(WsMessage message, String clientId, WaitingCallback callback, long timeout)|Send message to specific client, and waiting for client's response in specific timeout milliseconds. Trigger callback when receiving response or timeout.
+sendWaitingMessageReliably(WsMessage message, String clientId, WaitingCallback callback)|Send message to specific client, and waiting for client's response. Trigger callback when receiving response or timeout. Add message to pending queue if client is unavailable.
+sendWaitingMessageReliably(WsMessage message, String clientId, WaitingCallback callback, long timeout)|Send message to specific client, and waiting for client's response in specific timeout milliseconds. Trigger callback when receiving response or timeout. Add message to pending queue if client is unavailable.
+sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId)|Send message to specific client, and waiting for client's response. Retry 3 times until receiving success response. Add message to pending queue when fail to send.
+sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId, int retry)|Send message to specific client, and waiting for client's response. Retry specific times until receiving success response. Add message to pending queue when fail to send.
+	
 ###### Client side's sender APIs
 API|description(serverId can be null)
 ---|---
