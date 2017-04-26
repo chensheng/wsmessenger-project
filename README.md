@@ -93,3 +93,15 @@ In client side, `WsMessengerClient` is used to send message.
 TextMessage message = new TextMessage("This is a text message sent to server!");
 client.sendMessage(message, null);
 ```
+
+###### Server side's sender APIs
+API|description
+---|---
+sendMessage(WsMessage message)|send  message to all connected clients
+sendMessage(WsMessage message, String clientId)|send message to specific client
+
+###### Client side's sender APIs
+API|description(serverId can be null)
+---|---
+sendMessage(WsMessage message)|send  message to server
+sendMessage(WsMessage message, String serverId)|send message to server
