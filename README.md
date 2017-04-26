@@ -262,8 +262,8 @@ There are serveal advanced configurations for server and client.
 
 In server side, you can create a config file named `wsmessenger-server.properties` in your project. It is optional. The following table shows configuration details.
 
-Config property name|Config property value
----------------|---------------
+property name|property value
+-------------|-------------
 serverId|Default is `wsmessenger-server`. The server's id. The `serverId` will be set to message when sending message to client.
 serverPort|Default  is `2046`.  The port listened by server.
 pendingClientMaxCount|Default is `100`. Server will keep messages in pending queue for unavailable clients. If unavailable client's size exceed max count, new messages will not keep for new unavailable clients.
