@@ -8,6 +8,7 @@ Wsmessenger is a long connection message middleware based on websocket protocl. 
 * [Send message](#send-message)
 * [Implement customized message](#implement-customized-message)
 * [Listen message](#listen-message)
+* [Listen lifecycle](#listen-lifecycle)
 
 ### Import dependencies
 Here we use MAVEN to manage project's dependencies. 
@@ -173,9 +174,9 @@ client.sendMessage(message, null);
 ```
 
 ### Listen message
-Message listeners can be added to server and client to listen specific message. Developer should implement your own `MessageListener` to listen specific message.
+Message listeners can be added to listen specific message. Developer should implement your own `MessageListener`.
 
-In server side, `ServerMessageListener` is used to implement. The following is example listening `TextMessage`:
+In server side, `ServerMessageListener` is used to implement. The following is an example listening `TextMessage`:
 ```java
 public class MyTextMessageListener extends ServerMessageListener<TextMessage> {
     
@@ -189,7 +190,7 @@ public class MyTextMessageListener extends ServerMessageListener<TextMessage> {
 }
 ```
 
-In client side, `ClientMessageListener` is used to implement, The following is example listening `TextMessage`:
+In client side, `ClientMessageListener` is used to implement. The following is an example listening `TextMessage`:
 ```java
 public class MyTextMessageListener extends ClientMessageListener<TextMessage> {
 
@@ -198,6 +199,58 @@ public class MyTextMessageListener extends ClientMessageListener<TextMessage> {
         String replyContent = "Hello server, i have received your text message " + message.body().getContent();
         TextMessage relyMessage = new TextMessage(replyContent);
 	client.sendWaitingMessageReliablyWithRetry(replyMessage, null);
+    }
+
+}
+```
+
+### Listen lifecycle
+Lifecycle listeners can be added listen server and client's lifecycles. Developer should implement your own `LifecycleListener`.
+
+In server side, `ServerLifecycleListener` is used to implement. The following is an example:
+```java
+public class MyServerLifecycleListener extends ServerLifecycleListener {
+	
+    @Override
+    public void onServerStart(MessengerServer server) {
+        //server is started
+    }
+    
+    @Override
+    public void onClientConnect(ClientInfo clientInfo, MessengerServer server) {
+        //client is connected
+    }
+    
+    @Override
+    public void onClientDisconnect(ClientInfo clientInfo, MessengerServer server) {
+        //client is disconnected 
+    }
+    
+}
+```
+
+In client side, `ClientLifecycleListener` is used to implement. The following is an example:
+```java
+public class MyClientLifecycleListener extends ClientLifecycleListener {
+
+    @Override
+    public void onClientConnect(MessengerClient client) {
+        //success to connect server
+    }
+    
+    @Override
+    public void onClientStart(MessengerClient client) {
+        //client is started
+    }
+    
+    @Override
+    public void onClientStop(MessengerClient client) {
+        //client is stopped
+    }
+    
+    @Override
+    public void onClientRestart(MessengerClient client) {
+        //client restarts
     }
 
 }
