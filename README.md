@@ -7,6 +7,7 @@ Wsmessenger is a long connection message middleware based on websocket protocl. 
 * [Set up client side](#set-up-client-side)
 * [Send message](#send-message)
 * [Implement customized message](#implement-customized-message)
+* [Listen message](#listen-message)
 
 ### Import dependencies
 Here we use MAVEN to manage project's dependencies. 
@@ -122,7 +123,7 @@ sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId)|Send mes
 sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId, int retry)|Send message to specific server, and waiting for server's response. Retry specific times until receiving success response. Add message to pending queue when server is unavailable.
 
 ### Implement customized message
-Developer can implement customized message, and send between server and client. To implement a customized message, you should use `WsMessage` and `MessageBody`. The following is an example:
+Developer can implement customized message, and send it between server and client. To implement a customized message, you should use `WsMessage` and `MessageBody`. The following is an example:
 
 Firstly, implement a customized message body.
 ```java
@@ -169,4 +170,35 @@ Finally, send the customized message.
 ```java
 UserInfoMessage message = new UserInfoMessage(123, "wsmessenger");
 client.sendMessage(message, null);
+```
+
+### Listen message
+Message listeners can be added to server and client to listen specific message. Developer should implement your own `MessageListener` to listen specific message.
+
+In server side, `ServerMessageListener` is used to implement. The following is example listening `TextMessage`:
+```java
+public class MyTextMessageListener extends ServerMessageListener<TextMessage> {
+    
+    @Override
+    protected void onMessage(TextMessage message, ClientInfo clientInfo, MessengerServer server) {
+        String replyContent = "Hello client, i have received your text message " + message.body().getContent();
+        TextMessage relyMessage = new TextMessage(replyContent);
+	server.sendWaitingMessageReliablyWithRetry(replyMessage, clientInfo.getClientId());	
+    }
+    
+}
+```
+
+In client side, `ClientMessageListener` is used to implement, The following is example listening `TextMessage`:
+```java
+public class MyTextMessageListener extends ClientMessageListener<TextMessage> {
+
+    @Override
+    protected void onMessage(TextMessage message, MessengerClient client) {
+        String replyContent = "Hello server, i have received your text message " + message.body().getContent();
+        TextMessage relyMessage = new TextMessage(replyContent);
+	client.sendWaitingMessageReliablyWithRetry(replyMessage, null);
+    }
+
+}
 ```
