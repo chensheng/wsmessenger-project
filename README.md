@@ -1,5 +1,5 @@
 # Wsmessenger Project
-Wsmessenger is a long connection message middleware based on websocket protocl. It is built upon netty, so it can work well in high concurrency circumstances. It can be used to create PUSH service for android app. It also can be used to create monitor tools for cluster web applications.
+Wsmessenger is a long connection message middleware based on websocket protocl. It is built upon netty, so it can work well in high concurrency circumstances. It can be used to create PUSH service for android app. It also can be used to create monitor tools for web cluster.
 
 ## Quit start guide
 * [Import dependencies](#import-dependencies)
