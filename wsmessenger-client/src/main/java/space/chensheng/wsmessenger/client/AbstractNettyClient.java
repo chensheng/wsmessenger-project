@@ -84,7 +84,7 @@ public abstract class AbstractNettyClient implements NettyClient, ClientContexta
 	 * It will return false if the client has already started 
 	 * or another thread is trying to start this client. 
 	 * This method is thread safe.
-	 * @param true if success to  start, otherwise false
+	 * @return true if success to  start, otherwise false
 	 */
 	@Override
 	public boolean start() {

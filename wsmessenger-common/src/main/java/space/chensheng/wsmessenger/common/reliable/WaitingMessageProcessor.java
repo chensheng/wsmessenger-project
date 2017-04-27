@@ -54,7 +54,7 @@ public abstract class WaitingMessageProcessor<T, R, C extends MessengerContext> 
 	
 	/**
 	 * Add waiting information for message. Waiting thread will wait for receiver's response for the message, and then trigger callback method. 
-	 * @param msg
+	 * @param message
 	 * @param receiverId the messenger client id when calling this method in messenger server, and null in messenger client.
 	 * @param callback
 	 */
@@ -64,7 +64,7 @@ public abstract class WaitingMessageProcessor<T, R, C extends MessengerContext> 
 	
 	/**
 	 * Add waiting information for message. Waiting thread will wait for receiver's response for the message, and then trigger callback method. 
-	 * @param msg
+	 * @param message
 	 * @param receiverId the messenger client id when calling this method in messenger server, and null in messenger client.
 	 * @param callback
 	 * @param timeout milliseconds to wait for receiver's response
