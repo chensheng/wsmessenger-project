@@ -7,6 +7,7 @@ import space.chensheng.wsmessenger.client.listener.ClientLifecycleListener;
 import space.chensheng.wsmessenger.client.listener.ClientMessageListener;
 import space.chensheng.wsmessenger.client.listener.ResponseMessageListener;
 import space.chensheng.wsmessenger.client.listener.SystemLifecycleListener;
+import space.chensheng.wsmessenger.common.util.StringUtil;
 
 /**
  * A tool to create {@link WsMessengerClient}.
@@ -16,6 +17,8 @@ public class ClientBootstrap {
 	private List<ClientMessageListener<?>> msgListeners;
 	
 	private List<ClientLifecycleListener> lifecycleListeners;
+	
+	private String clientId;
 	
 	public ClientBootstrap() {
 		msgListeners = new LinkedList<ClientMessageListener<?>>();
@@ -30,9 +33,17 @@ public class ClientBootstrap {
 	 */
 	public WsMessengerClient build() {
 		WsMessengerClient client = new WsMessengerClient();
+		if (StringUtil.isNotEmpty(clientId)) {
+			client.setClientId(clientId);
+		}
 		client.addMessageListeners(msgListeners);
 		client.addLifecycleListeners(lifecycleListeners);
 		return client;
+	}
+	
+	public ClientBootstrap setClientId(String clientId) {
+		this.clientId = clientId;
+		return this;
 	}
 	
 	/**

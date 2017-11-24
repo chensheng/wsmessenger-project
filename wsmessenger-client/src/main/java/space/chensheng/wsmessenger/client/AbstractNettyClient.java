@@ -23,6 +23,7 @@ import space.chensheng.wsmessenger.client.component.ClientContext;
 import space.chensheng.wsmessenger.client.component.ClientContextable;
 import space.chensheng.wsmessenger.client.component.SenderCallback;
 import space.chensheng.wsmessenger.common.executor.TaskExecutor;
+import space.chensheng.wsmessenger.common.util.StringUtil;
 import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.message.converter.NettyMessageConverter;
 
@@ -88,6 +89,10 @@ public abstract class AbstractNettyClient implements NettyClient, ClientContexta
 	 */
 	@Override
 	public boolean start() {
+		if (StringUtil.isEmpty(this.getClientContext().getClientId())) {
+			throw new IllegalArgumentException("clientId must not be null");
+		}
+		
 		if(isActive()) {
 			logger.info("client has already been started, no need to start again!!!");
 			return false;

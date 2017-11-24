@@ -177,4 +177,8 @@ public abstract class MessengerClient extends AbstractNettyClient implements Rel
 		reliableAssembler.deliverPendingMessages(receiverId);	
 	}
 	
+	public void setClientId(String clientId) {
+		this.getClientContext().setClientId(clientId);
+	}
+	
 }

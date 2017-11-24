@@ -8,7 +8,6 @@ public class ClientContext extends MessengerContext {
 	
 	private static final String CUSTOMER_CONFIG_PATH = "/wsmessenger-client.properties";
 	
-	@PropOption(notNull = true)
 	private String clientId;
 	
 	@PropOption(notNull = true)
@@ -35,6 +34,10 @@ public class ClientContext extends MessengerContext {
 		super(DEFAULT_CONFIG_PATH, CUSTOMER_CONFIG_PATH);
 	}
 
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+	
 	public String getClientId() {
 		return clientId;
 	}
