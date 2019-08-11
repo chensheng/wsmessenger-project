@@ -18,6 +18,8 @@ public class JsonMapper {
 	
 	private static final JsonMapper NON_DEFAULT_INSTANCE = new JsonMapper(Include.NON_DEFAULT);
 
+	private static final JsonMapper NON_NULL_INSTANCE = new JsonMapper(Include.NON_NULL);
+
 	public static JsonMapper nonEmptyMapper() {
 		return NON_EMPTY_INSTANCE;
 	}
@@ -25,7 +27,10 @@ public class JsonMapper {
 	public static JsonMapper nonDefaultMapper() {
 		return NON_DEFAULT_INSTANCE;
 	}
-	
+
+	public static JsonMapper nonNullMapper() {
+	    return NON_NULL_INSTANCE;
+    }
 	
 	private ObjectMapper mapper;
 

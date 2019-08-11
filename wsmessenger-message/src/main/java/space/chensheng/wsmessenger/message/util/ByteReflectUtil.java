@@ -80,7 +80,7 @@ public class ByteReflectUtil {
 							buf.readBytes(strBytes);
 							fieldValue = new String(strBytes, Charsets.UTF8);
 						} else {
-							int strLen = ByteUtil.toUnsignedInt(buf.readByte());
+							int strLen = buf.readInt();
 							byte[] strBytes = new byte[strLen];
 							buf.readBytes(strBytes);
 							fieldValue = new String(strBytes, Charsets.UTF8);
@@ -167,7 +167,7 @@ public class ByteReflectUtil {
 								buf.writeBytes(strValue.getBytes(Charsets.UTF8));
 							} else {
 								byte[] strBytes = strValue.getBytes(Charsets.UTF8);
-								buf.writeByte(strBytes.length);
+								buf.writeInt(strBytes.length);
 								buf.writeBytes(strBytes);
 							}
 						} else {

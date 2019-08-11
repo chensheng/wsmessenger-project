@@ -2,6 +2,7 @@ package space.chensheng.wsmessenger.client;
 
 import java.util.List;
 
+import space.chensheng.wsmessenger.client.component.ClientContext;
 import space.chensheng.wsmessenger.client.listener.ClientLifecycleListener;
 import space.chensheng.wsmessenger.client.listener.ClientMessageListener;
 import space.chensheng.wsmessenger.common.listener.LifecycleListenerManager;
@@ -14,13 +15,15 @@ import space.chensheng.wsmessenger.message.sysmsg.ResponseMessage;
  * @author sheng.chen
  */
 public class WsMessengerClient extends MessengerClient {
-	private MessageListenerManager<ClientMessageListener<?>, WsMessage<?>> msgListenerMgr;
+	private MessageListenerManager<ClientMessageListener<?>, WsMessage<?>> msgListenerMgr = new MessageListenerManager<ClientMessageListener<?>, WsMessage<?>>();
 	
-	private LifecycleListenerManager<ClientLifecycleListener> lifecycleListenerMgr;
+	private LifecycleListenerManager<ClientLifecycleListener> lifecycleListenerMgr = new LifecycleListenerManager<ClientLifecycleListener>();
 	
 	WsMessengerClient() {
-		msgListenerMgr = new MessageListenerManager<ClientMessageListener<?>, WsMessage<?>>();
-		lifecycleListenerMgr = new LifecycleListenerManager<ClientLifecycleListener>();
+	}
+
+	WsMessengerClient(ClientContext clientContext) {
+		super(clientContext);
 	}
 	
 	@Override

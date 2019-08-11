@@ -106,4 +106,68 @@ public class ServerContext extends MessengerContext {
 	public int getRetryTaskMaxSize() {
 		return retryTaskMaxSize;
 	}
+
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
+
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
+	}
+
+	public void setPendingClientMaxCount(int pendingClientMaxCount) {
+		this.pendingClientMaxCount = pendingClientMaxCount;
+	}
+
+	public void setPendingClientMaxMsg(int pendingClientMaxMsg) {
+		this.pendingClientMaxMsg = pendingClientMaxMsg;
+	}
+
+	public void setPendingClientTimeoutMillis(int pendingClientTimeoutMillis) {
+		this.pendingClientTimeoutMillis = pendingClientTimeoutMillis;
+	}
+
+	public void setPendingClientTimeoutCheckerIntervalMinutes(int pendingClientTimeoutCheckerIntervalMinutes) {
+		this.pendingClientTimeoutCheckerIntervalMinutes = pendingClientTimeoutCheckerIntervalMinutes;
+	}
+
+	public void setAcceptorThreadSize(int acceptorThreadSize) {
+		this.acceptorThreadSize = acceptorThreadSize;
+	}
+
+	public void setIoThreadSize(int ioThreadSize) {
+		this.ioThreadSize = ioThreadSize;
+	}
+
+	public void setHeartbeatIntervalSeconds(int heartbeatIntervalSeconds) {
+		this.heartbeatIntervalSeconds = heartbeatIntervalSeconds;
+	}
+
+	public void setHeartbeatMaxFail(int heartbeatMaxFail) {
+		this.heartbeatMaxFail = heartbeatMaxFail;
+	}
+
+	public void setSoBacklog(int soBacklog) {
+		this.soBacklog = soBacklog;
+	}
+
+	public void setAllowHalfClosure(boolean allowHalfClosure) {
+		this.allowHalfClosure = allowHalfClosure;
+	}
+
+	public void setMaxContentLen(int maxContentLen) {
+		this.maxContentLen = maxContentLen;
+	}
+
+	public void setMaxFrameSize(int maxFrameSize) {
+		this.maxFrameSize = maxFrameSize;
+	}
+
+	public void setBusinessThreadSize(int businessThreadSize) {
+		this.businessThreadSize = businessThreadSize;
+	}
+
+	public void setRetryTaskMaxSize(int retryTaskMaxSize) {
+		this.retryTaskMaxSize = retryTaskMaxSize;
+	}
 }

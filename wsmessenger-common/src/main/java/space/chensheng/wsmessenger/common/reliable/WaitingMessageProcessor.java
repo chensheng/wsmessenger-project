@@ -59,7 +59,7 @@ public abstract class WaitingMessageProcessor<T, R, C extends MessengerContext> 
 	 * @param callback
 	 */
 	public void submitWaiting(T message, String receiverId, WaitingCallback<T> callback) {
-		this.submitWaiting(message, receiverId, callback, messengerContext.getWaitingMsgTimoutMillis());
+		this.submitWaiting(message, receiverId, callback, messengerContext.getWaitingMsgTimeoutMillis());
 	}
 	
 	/**

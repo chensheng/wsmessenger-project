@@ -18,8 +18,8 @@ public abstract class MessengerContext {
 	private static final Logger logger = LoggerFactory.getLogger(MessengerContext.class);
 	
 	private int maxPendingMsg;
-	
-	private int waitingMsgTimoutMillis;
+
+	private int waitingMsgTimeoutMillis;
 	
 	private int waitingMsgMaxSize;
 	
@@ -129,21 +129,33 @@ public abstract class MessengerContext {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return JsonMapper.nonEmptyMapper().toJson(this);
 	}
-	
-	public int getMaxPendingMsg() {
-		return maxPendingMsg;
-	}
 
-	public int getWaitingMsgTimoutMillis() {
-		return waitingMsgTimoutMillis;
-	}
+    public int getMaxPendingMsg() {
+        return maxPendingMsg;
+    }
 
-	public int getWaitingMsgMaxSize() {
-		return waitingMsgMaxSize;
-	}
+    public void setMaxPendingMsg(int maxPendingMsg) {
+        this.maxPendingMsg = maxPendingMsg;
+    }
+
+    public int getWaitingMsgTimeoutMillis() {
+        return waitingMsgTimeoutMillis;
+    }
+
+    public void setWaitingMsgTimeoutMillis(int waitingMsgTimeoutMillis) {
+        this.waitingMsgTimeoutMillis = waitingMsgTimeoutMillis;
+    }
+
+    public int getWaitingMsgMaxSize() {
+        return waitingMsgMaxSize;
+    }
+
+    public void setWaitingMsgMaxSize(int waitingMsgMaxSize) {
+        this.waitingMsgMaxSize = waitingMsgMaxSize;
+    }
 }

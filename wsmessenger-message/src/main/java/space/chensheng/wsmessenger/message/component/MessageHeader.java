@@ -62,4 +62,5 @@ public class MessageHeader extends ByteableBean {
 	void setMessageClass(String messageClass) {
 		this.messageClass = messageClass;
 	}
+
 }

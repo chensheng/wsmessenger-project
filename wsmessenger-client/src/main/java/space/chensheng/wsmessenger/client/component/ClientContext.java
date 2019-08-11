@@ -9,8 +9,7 @@ public class ClientContext extends MessengerContext {
 	private static final String CUSTOMER_CONFIG_PATH = "/wsmessenger-client.properties";
 	
 	private String clientId;
-	
-	@PropOption(notNull = true)
+
 	private String serverUrl;
 	
 	private int ioThreadPoolSize;
@@ -78,4 +77,39 @@ public class ClientContext extends MessengerContext {
 		return retryTaskMaxSize;
 	}
 
+	public void setServerUrl(String serverUrl) {
+		this.serverUrl = serverUrl;
+	}
+
+	public void setIoThreadPoolSize(int ioThreadPoolSize) {
+		this.ioThreadPoolSize = ioThreadPoolSize;
+	}
+
+	public void setHeartbeatSeconds(int heartbeatSeconds) {
+		this.heartbeatSeconds = heartbeatSeconds;
+	}
+
+	public void setHeartbeatMaxFail(int heartbeatMaxFail) {
+		this.heartbeatMaxFail = heartbeatMaxFail;
+	}
+
+	public void setReconnectMillis(int reconnectMillis) {
+		this.reconnectMillis = reconnectMillis;
+	}
+
+	public void setMaxContentLen(int maxContentLen) {
+		this.maxContentLen = maxContentLen;
+	}
+
+	public void setMaxFramePayloadLen(int maxFramePayloadLen) {
+		this.maxFramePayloadLen = maxFramePayloadLen;
+	}
+
+	public void setBusinessThreadPoolSize(int businessThreadPoolSize) {
+		this.businessThreadPoolSize = businessThreadPoolSize;
+	}
+
+	public void setRetryTaskMaxSize(int retryTaskMaxSize) {
+		this.retryTaskMaxSize = retryTaskMaxSize;
+	}
 }

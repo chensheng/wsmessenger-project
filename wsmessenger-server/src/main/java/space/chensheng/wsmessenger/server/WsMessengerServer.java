@@ -1,7 +1,5 @@
 package space.chensheng.wsmessenger.server;
 
-import java.util.List;
-
 import io.netty.channel.Channel;
 import space.chensheng.wsmessenger.common.listener.LifecycleListenerManager;
 import space.chensheng.wsmessenger.common.listener.MessageListenerManager;
@@ -9,22 +7,27 @@ import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.message.sysmsg.ResponseMessage;
 import space.chensheng.wsmessenger.server.clientmng.ClientInfo;
 import space.chensheng.wsmessenger.server.clientmng.ClientRegistry;
+import space.chensheng.wsmessenger.server.component.ServerContext;
 import space.chensheng.wsmessenger.server.listener.ServerLifecycleListener;
 import space.chensheng.wsmessenger.server.listener.ServerMessageListener;
+
+import java.util.List;
 
 /**
  * Messenger server which can send message to messenger client through websocket protocol built upon netty.
  * @author sheng.chen
  */
 public class WsMessengerServer extends MessengerServer { 
-	private MessageListenerManager<ServerMessageListener<?>, WsMessage<?>> msgListenerMgr;
+	private MessageListenerManager<ServerMessageListener<?>, WsMessage<?>> msgListenerMgr = new MessageListenerManager<ServerMessageListener<?>, WsMessage<?>>();
 
-	private LifecycleListenerManager<ServerLifecycleListener> lifecycleListenerMgr;
+	private LifecycleListenerManager<ServerLifecycleListener> lifecycleListenerMgr = new LifecycleListenerManager<ServerLifecycleListener>();
 	
 	WsMessengerServer() {
-		msgListenerMgr = new MessageListenerManager<ServerMessageListener<?>, WsMessage<?>>();
-		lifecycleListenerMgr = new LifecycleListenerManager<ServerLifecycleListener>();
 	}
+
+	WsMessengerServer(ServerContext serverContext) {
+	    super(serverContext);
+    }
 	
 	@Override
 	public void onMessage(WsMessage<?> message, String senderId) {

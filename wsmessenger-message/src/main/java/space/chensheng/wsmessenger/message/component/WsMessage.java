@@ -1,5 +1,6 @@
 package space.chensheng.wsmessenger.message.component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import space.chensheng.wsmessenger.common.util.JsonMapper;
@@ -10,9 +11,9 @@ import space.chensheng.wsmessenger.common.util.JsonMapper;
  */
 
 public abstract class WsMessage<T extends MessageBody> extends ByteableBean {
-	
+
 	private MessageHeader header;
-	
+
 	private T body;
 	
 	/**

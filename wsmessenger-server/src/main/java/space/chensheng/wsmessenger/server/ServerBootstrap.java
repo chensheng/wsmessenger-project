@@ -1,12 +1,14 @@
 package space.chensheng.wsmessenger.server;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import space.chensheng.wsmessenger.server.component.ServerContext;
+import space.chensheng.wsmessenger.server.component.ServerContextCustomizer;
 import space.chensheng.wsmessenger.server.listener.ResponseMessageListener;
 import space.chensheng.wsmessenger.server.listener.ServerLifecycleListener;
 import space.chensheng.wsmessenger.server.listener.ServerMessageListener;
 import space.chensheng.wsmessenger.server.listener.SystemLifecycleListener;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A tool to create {@link WsMessengerServer}.
@@ -16,6 +18,8 @@ public class ServerBootstrap {
 	private List<ServerMessageListener<?>> msgListeners;
 	
 	private List<ServerLifecycleListener> lifecycleListeners;
+
+	private ServerContextCustomizer serverContextCustomizer;
 	
 	public ServerBootstrap() {
 		msgListeners = new LinkedList<ServerMessageListener<?>>();
@@ -29,7 +33,11 @@ public class ServerBootstrap {
 	 * @return
 	 */
 	public WsMessengerServer build() {
-		WsMessengerServer server = new WsMessengerServer();
+	    ServerContext serverContext = new ServerContext();
+	    if (serverContextCustomizer != null) {
+	        serverContextCustomizer.customize(serverContext);
+        }
+		WsMessengerServer server = new WsMessengerServer(serverContext);
 		server.addMessageListeners(msgListeners);
 		server.addLifecycleListeners(lifecycleListeners);
 		return server;
@@ -84,6 +92,11 @@ public class ServerBootstrap {
 		if (listeners != null && !listeners.isEmpty()) {
 			lifecycleListeners.addAll(listeners);
 		}
+		return this;
+	}
+
+	public ServerBootstrap setServerContextCustomizer(ServerContextCustomizer customizer) {
+		this.serverContextCustomizer = customizer;
 		return this;
 	}
 	

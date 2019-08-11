@@ -1,13 +1,14 @@
 package space.chensheng.wsmessenger.client;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import space.chensheng.wsmessenger.client.component.ClientContext;
+import space.chensheng.wsmessenger.client.component.ClientContextCustomizer;
 import space.chensheng.wsmessenger.client.listener.ClientLifecycleListener;
 import space.chensheng.wsmessenger.client.listener.ClientMessageListener;
 import space.chensheng.wsmessenger.client.listener.ResponseMessageListener;
 import space.chensheng.wsmessenger.client.listener.SystemLifecycleListener;
-import space.chensheng.wsmessenger.common.util.StringUtil;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A tool to create {@link WsMessengerClient}.
@@ -17,8 +18,8 @@ public class ClientBootstrap {
 	private List<ClientMessageListener<?>> msgListeners;
 	
 	private List<ClientLifecycleListener> lifecycleListeners;
-	
-	private String clientId;
+
+	private ClientContextCustomizer clientContextCustomizer;
 	
 	public ClientBootstrap() {
 		msgListeners = new LinkedList<ClientMessageListener<?>>();
@@ -32,18 +33,15 @@ public class ClientBootstrap {
 	 * @return
 	 */
 	public WsMessengerClient build() {
-		WsMessengerClient client = new WsMessengerClient();
-		if (StringUtil.isNotEmpty(clientId)) {
-			client.setClientId(clientId);
-		}
+        ClientContext clientContext = new ClientContext();
+        if (clientContextCustomizer != null) {
+            clientContextCustomizer.customize(clientContext);
+        }
+
+		WsMessengerClient client = new WsMessengerClient(clientContext);
 		client.addMessageListeners(msgListeners);
 		client.addLifecycleListeners(lifecycleListeners);
 		return client;
-	}
-	
-	public ClientBootstrap setClientId(String clientId) {
-		this.clientId = clientId;
-		return this;
 	}
 	
 	/**
@@ -97,6 +95,11 @@ public class ClientBootstrap {
 		}
 		return this;
 	}
+
+	public ClientBootstrap setClientContextCustomizer(ClientContextCustomizer customizer) {
+	    this.clientContextCustomizer = customizer;
+	    return this;
+    }
 	
 	private void initSystemListeners() {
 		this.addMessageListener(new ResponseMessageListener());
