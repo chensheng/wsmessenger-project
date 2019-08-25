@@ -1,5 +1,6 @@
 package space.chensheng.wsmessenger.server;
 
+import space.chensheng.wsmessenger.server.clientmng.ClientValidator;
 import space.chensheng.wsmessenger.server.component.ServerContext;
 import space.chensheng.wsmessenger.server.component.ServerContextCustomizer;
 import space.chensheng.wsmessenger.server.listener.ResponseMessageListener;
@@ -20,6 +21,8 @@ public class ServerBootstrap {
 	private List<ServerLifecycleListener> lifecycleListeners;
 
 	private ServerContextCustomizer serverContextCustomizer;
+
+	private ClientValidator clientValidator;
 	
 	public ServerBootstrap() {
 		msgListeners = new LinkedList<ServerMessageListener<?>>();
@@ -40,6 +43,7 @@ public class ServerBootstrap {
 		WsMessengerServer server = new WsMessengerServer(serverContext);
 		server.addMessageListeners(msgListeners);
 		server.addLifecycleListeners(lifecycleListeners);
+		server.setClientValidator(clientValidator);
 		return server;
 	}
 	
@@ -97,6 +101,11 @@ public class ServerBootstrap {
 
 	public ServerBootstrap setServerContextCustomizer(ServerContextCustomizer customizer) {
 		this.serverContextCustomizer = customizer;
+		return this;
+	}
+
+	public ServerBootstrap setClientValidator(ClientValidator clientValidator) {
+		this.clientValidator = clientValidator;
 		return this;
 	}
 	

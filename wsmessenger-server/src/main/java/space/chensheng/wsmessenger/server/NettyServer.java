@@ -39,5 +39,17 @@ public interface NettyServer extends Lifecycle, ServerContextable {
 	 * @return
 	 */
 	ChannelHandler createChannelHandler();
-	
+
+    /**
+     * Whether validate client step is needed
+     * @return true if need to validate client, otherwise return false
+     */
+	boolean needToValidateClient();
+
+    /**
+     *  Check whether client is valid
+     * @param clientInfo
+     * @return true if client is valid, otherwise return false
+     */
+	boolean validateClient(ClientInfo clientInfo);
 }

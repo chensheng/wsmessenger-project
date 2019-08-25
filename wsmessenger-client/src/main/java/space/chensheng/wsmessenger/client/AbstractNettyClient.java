@@ -1,24 +1,13 @@
 package space.chensheng.wsmessenger.client;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.util.concurrent.GenericFutureListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import space.chensheng.wsmessenger.client.component.ClientContext;
 import space.chensheng.wsmessenger.client.component.ClientContextable;
 import space.chensheng.wsmessenger.client.component.SenderCallback;
@@ -26,6 +15,12 @@ import space.chensheng.wsmessenger.common.executor.TaskExecutor;
 import space.chensheng.wsmessenger.common.util.StringUtil;
 import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.message.converter.NettyMessageConverter;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A abstract class implements basic functions to communicate server built upon netty. 
@@ -156,7 +151,7 @@ public abstract class AbstractNettyClient implements NettyClient, ClientContexta
 	 * @param msg
 	 * @param callback
 	 */
-	protected void sendMessage(WsMessage<?> msg, SenderCallback callback) {
+	protected void sendMessage(WsMessage msg, SenderCallback callback) {
 		if (msg == null) {
 			return;
 		}
@@ -169,7 +164,7 @@ public abstract class AbstractNettyClient implements NettyClient, ClientContexta
 			return;
 		}
 		
-		msg.header().setSenderId(getClientContext().getClientId());
+		msg.getHeader().setSenderId(getClientContext().getClientId());
 		BinaryWebSocketFrame bwsFrame = NettyMessageConverter.toBinaryWebSocketFrame(msg);
 		ChannelFuture sendFuture = clientChannel.writeAndFlush(bwsFrame);
 		sendFuture.addListener(new GenericFutureListener<ChannelFuture>() {

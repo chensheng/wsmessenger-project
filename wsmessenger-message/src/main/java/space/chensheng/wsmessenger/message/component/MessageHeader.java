@@ -1,24 +1,21 @@
 package space.chensheng.wsmessenger.message.component;
 
+import space.chensheng.wsmessenger.message.converter.SerializeType;
 import space.chensheng.wsmessenger.message.util.MessageIdGenerator;
 
-public class MessageHeader extends ByteableBean {
-	@MessageOptions(order = 1)
+public class MessageHeader {
+	private SerializeType serializeType = SerializeType.JSON;
+
 	private String messageClass;
-	
-	@MessageOptions(order = 2)
+
 	private short protocolVersion;
-	
-	@MessageOptions(order = 3)
+
 	private long messageId;
-	
-	@MessageOptions(order = 4)
+
 	private long createTime;
-	
-	@MessageOptions(order = 5)
+
 	private boolean needResponse;
-	
-	@MessageOptions(order = 6, describeLastStrLen = true)
+
 	private String senderId;
 	
 	public MessageHeader() {
@@ -27,40 +24,59 @@ public class MessageHeader extends ByteableBean {
 		createTime = System.currentTimeMillis();
 	}
 
-	public short getProtocolVersion() {
-		return protocolVersion;
-	}
+    public SerializeType getSerializeType() {
+        return serializeType;
+    }
 
-	public long getMessageId() {
-		return messageId;
-	}
+    public void setSerializeType(SerializeType serializeType) {
+        this.serializeType = serializeType;
+    }
 
-	public long getCreateTime() {
-		return createTime;
-	}
+    public String getMessageClass() {
+        return messageClass;
+    }
 
-	public boolean isNeedResponse() {
-		return needResponse;
-	}
+    public void setMessageClass(String messageClass) {
+        this.messageClass = messageClass;
+    }
 
-	public void setNeedResponse(boolean needResponse) {
-		this.needResponse = needResponse;
-	}
+    public short getProtocolVersion() {
+        return protocolVersion;
+    }
 
-	public String getSenderId() {
-		return senderId;
-	}
+    public void setProtocolVersion(short protocolVersion) {
+        this.protocolVersion = protocolVersion;
+    }
 
-	public void setSenderId(String senderId) {
-		this.senderId = senderId;
-	}
+    public long getMessageId() {
+        return messageId;
+    }
 
-	public String getMessageClass() {
-		return messageClass;
-	}
+    public void setMessageId(long messageId) {
+        this.messageId = messageId;
+    }
 
-	void setMessageClass(String messageClass) {
-		this.messageClass = messageClass;
-	}
+    public long getCreateTime() {
+        return createTime;
+    }
 
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public boolean isNeedResponse() {
+        return needResponse;
+    }
+
+    public void setNeedResponse(boolean needResponse) {
+        this.needResponse = needResponse;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
 }

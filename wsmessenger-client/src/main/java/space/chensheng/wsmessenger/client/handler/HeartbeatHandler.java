@@ -1,33 +1,32 @@
 package space.chensheng.wsmessenger.client.handler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.timeout.IdleStateEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import space.chensheng.wsmessenger.client.component.ClientContext;
 import space.chensheng.wsmessenger.common.util.ExceptionUtil;
 
 public class HeartbeatHandler extends SimpleChannelInboundHandler<PongWebSocketFrame>{
 	private static final Logger logger = LoggerFactory.getLogger(HeartbeatHandler.class);
 	
-	private ClientContext crawlerContext;
+	private ClientContext clientContext;
 	
 	private int readIdleCount = 0;
 	
-	HeartbeatHandler(ClientContext crawlerContext) {
-		this.crawlerContext = crawlerContext;
+	HeartbeatHandler(ClientContext clientContext) {
+		this.clientContext = clientContext;
 	}
 	
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (evt == IdleStateEvent.READER_IDLE_STATE_EVENT) {
 			readIdleCount++;
-			if (readIdleCount > crawlerContext.getHeartbeatMaxFail()) {
-				logger.debug("read idle count exceed {}, channel will be closed.", crawlerContext.getHeartbeatMaxFail());
+			if (readIdleCount > clientContext.getHeartbeatMaxFail()) {
+				logger.debug("read idle count exceed {}, channel will be closed.", clientContext.getHeartbeatMaxFail());
 				ctx.close();
 			}
 			ctx.pipeline().writeAndFlush(new PingWebSocketFrame());

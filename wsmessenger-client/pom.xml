@@ -6,31 +6,29 @@
   <parent>
     <groupId>space.chensheng.wsmessenger</groupId>
     <artifactId>wsmessenger-parent</artifactId>
-    <version>1.1.0</version>
+    <version>1.5.0</version>
   </parent>
   <artifactId>wsmessenger-client</artifactId>
   
-  <name>${project.parent.groupId}:${project.parent.groupId}</name>
+  <name>wsmessenger-client</name>
   <url>http://www.chensheng.space</url>
 
   <dependencies>
     <dependency>
       <groupId>space.chensheng.wsmessenger</groupId>
       <artifactId>wsmessenger-common</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${revision}</version>
     </dependency>
      <dependency>
       <groupId>space.chensheng.wsmessenger</groupId>
       <artifactId>wsmessenger-message</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${revision}</version>
     </dependency>
-    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-    
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -43,7 +41,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
     </dependency>
-  
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-all</artifactId>

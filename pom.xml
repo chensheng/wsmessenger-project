@@ -4,10 +4,10 @@
 
   <groupId>space.chensheng.wsmessenger</groupId>
   <artifactId>wsmessenger-parent</artifactId>
-  <version>1.1.0</version>
+  <version>1.5.0</version>
   <packaging>pom</packaging>
 
-  <name>${project.groupId}:${project.artifactId}</name>
+  <name>wsmessenger-parent</name>
   <url>http://www.chensheng.space</url>
   <description>Wsmessenger is a long connection message middleware based on websocket protocl. It is built upon netty, so it can work well in high concurrency circumstances. It can be used to create PUSH service for android app. It also can be used to create monitor tools for web cluster.</description>
   
@@ -39,35 +39,17 @@
   </modules>
   
   <properties>
+    <revision>1.5.0</revision>
     <jdk.build.source>1.8</jdk.build.source>
     <jdk.build.target>1.8</jdk.build.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-    
     <junit.version>3.8.1</junit.version>
     <slf4j.version>1.7.7</slf4j.version>
     <log4j.version>1.2.14</log4j.version>
     <netty.version>4.0.30.Final</netty.version>
-    <jackson.version>2.4.0</jackson.version>
+    <jackson.version> 2.9.9</jackson.version>
   </properties>
-  
-  <repositories>
-    <repository>
-      <id>nexus</id>
-      <name>Team Nexus Repository</name>
-      <url>http://192.168.0.168:8081/nexus/content/groups/public/</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>nexus</id>
-      <name>Team Nexus Repository</name>
-      <url>http://192.168.0.168:8081/nexus/content/groups/public/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
   
   <dependencyManagement>
     <dependencies>
@@ -77,7 +59,6 @@
         <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
-      
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -93,7 +74,6 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>${slf4j.version}</version>
       </dependency>
-      
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
@@ -109,7 +89,6 @@
         <artifactId>jackson-module-jaxb-annotations</artifactId>
         <version>${jackson.version}</version>
       </dependency>
-      
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-all</artifactId>
@@ -181,7 +160,6 @@
           </plugin>
         </plugins>
       </build>
-      
       <distributionManagement>
         <snapshotRepository>
           <id>oss</id>

@@ -13,9 +13,9 @@ import space.chensheng.wsmessenger.message.converter.NettyMessageConverter;
 public class WsMessageHandler extends SimpleChannelInboundHandler<BinaryWebSocketFrame>{
 	private TaskExecutor taskExecutor;
 	
-	private Messenger<WsMessage<?>> messenger;
+	private Messenger<WsMessage> messenger;
 	
-	public WsMessageHandler(TaskExecutor taskExecutor, Messenger<WsMessage<?>> messenger) {
+	public WsMessageHandler(TaskExecutor taskExecutor, Messenger<WsMessage> messenger) {
 		if (taskExecutor == null) {
 			throw new NullPointerException("taskExecutor may not be null");
 		}
@@ -28,12 +28,12 @@ public class WsMessageHandler extends SimpleChannelInboundHandler<BinaryWebSocke
 	
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, BinaryWebSocketFrame msg) throws Exception {
-	    WsMessage<?> a2dMessage = NettyMessageConverter.fromBinaryWebSocketFrame(msg);
+	    WsMessage a2dMessage = NettyMessageConverter.fromBinaryWebSocketFrame(msg);
 		taskExecutor.executeTask(new Runnable() {
 
 			@Override
 			public void run() {
-				messenger.onMessage(a2dMessage, a2dMessage.header().getSenderId());
+				messenger.onMessage(a2dMessage, a2dMessage.getHeader().getSenderId());
 			}
 			
 		});

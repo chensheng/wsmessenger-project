@@ -1,7 +1,5 @@
 package space.chensheng.wsmessenger.client;
 
-import java.util.List;
-
 import space.chensheng.wsmessenger.client.component.ClientContext;
 import space.chensheng.wsmessenger.client.listener.ClientLifecycleListener;
 import space.chensheng.wsmessenger.client.listener.ClientMessageListener;
@@ -10,12 +8,14 @@ import space.chensheng.wsmessenger.common.listener.MessageListenerManager;
 import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.message.sysmsg.ResponseMessage;
 
+import java.util.List;
+
 /**
  * Messenger client which can send message to messenger server through websocket protocol built upon netty.
  * @author sheng.chen
  */
 public class WsMessengerClient extends MessengerClient {
-	private MessageListenerManager<ClientMessageListener<?>, WsMessage<?>> msgListenerMgr = new MessageListenerManager<ClientMessageListener<?>, WsMessage<?>>();
+	private MessageListenerManager<ClientMessageListener<?>, WsMessage> msgListenerMgr = new MessageListenerManager<ClientMessageListener<?>, WsMessage>();
 	
 	private LifecycleListenerManager<ClientLifecycleListener> lifecycleListenerMgr = new LifecycleListenerManager<ClientLifecycleListener>();
 	
@@ -27,7 +27,7 @@ public class WsMessengerClient extends MessengerClient {
 	}
 	
 	@Override
-	public void onMessage(WsMessage<?> message, String senderId) {
+	public void onMessage(WsMessage message, String senderId) {
 		sendResponseIfNecessary(message);
 		
 		List<ClientMessageListener<?>> listeners = msgListenerMgr.find(message);
@@ -104,9 +104,11 @@ public class WsMessengerClient extends MessengerClient {
 		lifecycleListenerMgr.add(listeners);
 	}
 
-	private void sendResponseIfNecessary(WsMessage<?> message) {
-		if (message.header().isNeedResponse()) {
-			ResponseMessage respMsg = new ResponseMessage(message.header().getMessageId(), true);
+	private void sendResponseIfNecessary(WsMessage message) {
+		if (message.getHeader().isNeedResponse()) {
+			ResponseMessage respMsg = new ResponseMessage();
+			respMsg.setRespMessageId(message.getHeader().getMessageId());
+			respMsg.setSuccess(true);
 			sendMessage(respMsg);
 		}
 	}

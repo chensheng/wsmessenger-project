@@ -1,7 +1,10 @@
 package space.chensheng.wsmessenger.client.component;
 
 import space.chensheng.wsmessenger.common.component.MessengerContext;
-import space.chensheng.wsmessenger.common.component.PropOption;
+import space.chensheng.wsmessenger.common.util.StringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientContext extends MessengerContext {
 	private static final String DEFAULT_CONFIG_PATH = "/wsmessenger-client-default.properties";
@@ -27,7 +30,8 @@ public class ClientContext extends MessengerContext {
     private int businessThreadPoolSize;
 	
 	private int retryTaskMaxSize;
-	
+
+	private Map<String, String> clientHeaders = new HashMap<String, String>();
 	
 	public ClientContext() {
 		super(DEFAULT_CONFIG_PATH, CUSTOMER_CONFIG_PATH);
@@ -112,4 +116,19 @@ public class ClientContext extends MessengerContext {
 	public void setRetryTaskMaxSize(int retryTaskMaxSize) {
 		this.retryTaskMaxSize = retryTaskMaxSize;
 	}
+
+    public Map<String, String> getClientHeaders() {
+        return clientHeaders;
+    }
+
+    public void setClientHeaders(Map<String, String> clientHeaders) {
+        this.clientHeaders = clientHeaders;
+    }
+
+    public void addClientHeader(String headerName, String headerValue) {
+	    if (StringUtil.isEmpty(headerName) || StringUtil.isEmpty(headerValue)) {
+	        return;
+        }
+	    clientHeaders.put(headerName, headerValue);
+    }
 }

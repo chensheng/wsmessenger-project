@@ -17,7 +17,7 @@ import space.chensheng.wsmessenger.server.reliable.ServerReliableAssembler;
  * A class implements basic functions to send message to messenger client through websocket protocol built upon netty. 
  * @author sheng.chen
  */
-public abstract class MessengerServer extends AbstractNettyServer implements ReliableMessenger<WsMessage<?>, ResponseMessage> {
+public abstract class MessengerServer extends AbstractNettyServer implements ReliableMessenger<WsMessage, ResponseMessage> {
 	private ServerReliableAssembler reliableAssembler;
 	
     public MessengerServer() {
@@ -50,21 +50,21 @@ public abstract class MessengerServer extends AbstractNettyServer implements Rel
 	}
 	
 	@Override
-	public void sendMessage(WsMessage<?> message) {
+	public void sendMessage(WsMessage message) {
 		super.sendMessage(message, null);
 	}
 
 	@Override
-	public void sendMessage(WsMessage<?> message, String clientId) {
+	public void sendMessage(WsMessage message, String clientId) {
 		super.sendMessage(message, clientId, null);
 	}
 	
 	@Override
-	public void sendMessageReliably(WsMessage<?> message, String clientId) {
+	public void sendMessageReliably(WsMessage message, String clientId) {
 		super.sendMessage(message, clientId, new SenderCallbackAdapter() {
 			
 			@Override
-			public void onFail(WsMessage<?> msg, String receiverId) {
+			public void onFail(WsMessage msg, String receiverId) {
 				reliableAssembler.addPendingMessage(receiverId, msg);
 			}
 			
@@ -72,95 +72,95 @@ public abstract class MessengerServer extends AbstractNettyServer implements Rel
 	}
 	
 	@Override
-	public void sendWaitingMessage(WsMessage<?> message, String clientId, WaitingCallback<WsMessage<?>> callback, long timeout) {
+	public void sendWaitingMessage(WsMessage message, String clientId, WaitingCallback<WsMessage> callback, long timeout) {
 		if (message != null) {
-			message.header().setNeedResponse(true);
+			message.getHeader().setNeedResponse(true);
 		}
 		
 		super.sendMessage(message, new SenderCallbackAdapter() {
 			@Override
-			public void onFail(WsMessage<?> msg, String receiverId) {
+			public void onFail(WsMessage msg, String receiverId) {
 				if (callback != null) {
 					callback.onFail(msg, receiverId);
 				}
 			}
 			
 			@Override
-			public void onSuccess(WsMessage<?> msg, String receiverId) {
+			public void onSuccess(WsMessage msg, String receiverId) {
 				reliableAssembler.waitingResponse(msg, receiverId, callback, timeout);
 			}
 		});
 	}
 	
 	@Override
-	public void sendWaitingMessage(WsMessage<?> message, String clientId, WaitingCallback<WsMessage<?>> callback) {
+	public void sendWaitingMessage(WsMessage message, String clientId, WaitingCallback<WsMessage> callback) {
 		if (message != null) {
-			message.header().setNeedResponse(true);
+			message.getHeader().setNeedResponse(true);
 		}
 		
 		super.sendMessage(message, new SenderCallbackAdapter() {
 			@Override
-			public void onFail(WsMessage<?> msg, String receiverId) {
+			public void onFail(WsMessage msg, String receiverId) {
 				if (callback != null) {
 					callback.onFail(msg, receiverId);
 				}
 			}
 			
 			@Override
-			public void onSuccess(WsMessage<?> msg, String receiverId) {
+			public void onSuccess(WsMessage msg, String receiverId) {
 				reliableAssembler.waitingResponse(msg, receiverId, callback);
 			}
 		});
 	}
 	
 	@Override
-	public void sendWaitingMessageReliably(WsMessage<?> message, String clientId, WaitingCallback<WsMessage<?>> callback) {
+	public void sendWaitingMessageReliably(WsMessage message, String clientId, WaitingCallback<WsMessage> callback) {
 		if (message != null) {
-			message.header().setNeedResponse(true);
+			message.getHeader().setNeedResponse(true);
 		}
 		
 		super.sendMessage(message, new SenderCallbackAdapter() {
 			@Override
-			public void onFail(WsMessage<?> msg, String receiverId) {
+			public void onFail(WsMessage msg, String receiverId) {
 				reliableAssembler.addPendingMessage(receiverId, msg);
 			}
 			
 			@Override
-			public void onSuccess(WsMessage<?> msg, String receiverId) {
+			public void onSuccess(WsMessage msg, String receiverId) {
 				reliableAssembler.waitingResponse(msg, receiverId, callback);
 			}
 		});
 	}
 	
 	@Override
-	public void sendWaitingMessageReliably(WsMessage<?> message, String clientId, WaitingCallback<WsMessage<?>> callback, long timeout) {
+	public void sendWaitingMessageReliably(WsMessage message, String clientId, WaitingCallback<WsMessage> callback, long timeout) {
 		if (message != null) {
-			message.header().setNeedResponse(true);
+			message.getHeader().setNeedResponse(true);
 		}
 		
 		super.sendMessage(message, new SenderCallbackAdapter() {
 			@Override
-			public void onFail(WsMessage<?> msg, String receiverId) {
+			public void onFail(WsMessage msg, String receiverId) {
 				reliableAssembler.addPendingMessage(receiverId, msg);
 			}
 			
 			@Override
-			public void onSuccess(WsMessage<?> msg, String receiverId) {
+			public void onSuccess(WsMessage msg, String receiverId) {
 				reliableAssembler.waitingResponse(msg, receiverId, callback, timeout);
 			}
 		});
 	}
 	
 	@Override
-	public void sendWaitingMessageReliablyWithRetry(WsMessage<?> message, String clientId) {
+	public void sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId) {
 		TaskExecutor taskExecutor = getTaskExecutor();
-		taskExecutor.submitRetryable(new WaitingMessageRetryable<WsMessage<?>, ResponseMessage>(this,  taskExecutor, message, clientId));
+		taskExecutor.submitRetryable(new WaitingMessageRetryable<WsMessage, ResponseMessage>(this,  taskExecutor, message, clientId));
 	}
 	
 	@Override
-	public void sendWaitingMessageReliablyWithRetry(WsMessage<?> message, String clientId, int retry) {
+	public void sendWaitingMessageReliablyWithRetry(WsMessage message, String clientId, int retry) {
 		TaskExecutor taskExecutor = getTaskExecutor();
-		taskExecutor.submitRetryable(new WaitingMessageRetryable<WsMessage<?>, ResponseMessage>(this,  taskExecutor, message, clientId, retry));
+		taskExecutor.submitRetryable(new WaitingMessageRetryable<WsMessage, ResponseMessage>(this,  taskExecutor, message, clientId, retry));
 	}
 	
 	@Override

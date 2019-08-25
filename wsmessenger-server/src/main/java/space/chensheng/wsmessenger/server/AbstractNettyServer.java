@@ -151,7 +151,7 @@ public abstract class AbstractNettyServer implements NettyServer {
 	 * @param message
 	 * @param callback
 	 */
-	protected void sendMessage(WsMessage<?> message, SenderCallback callback) {
+	protected void sendMessage(WsMessage message, SenderCallback callback) {
 		if (message == null) {
 			return;
 		}
@@ -187,7 +187,7 @@ public abstract class AbstractNettyServer implements NettyServer {
 	 * @param clientId
 	 * @param callback
 	 */
-	protected void sendMessage(WsMessage<?> message, String clientId, SenderCallback callback) {
+	protected void sendMessage(WsMessage message, String clientId, SenderCallback callback) {
 		if (message == null) {
 			return;
 		}
@@ -233,7 +233,7 @@ public abstract class AbstractNettyServer implements NettyServer {
 		});
 	}
 	
-	private void decorateMessage(WsMessage<?> msg) {
-		msg.header().setSenderId(getServerContext().getServerId());
+	private void decorateMessage(WsMessage msg) {
+		msg.getHeader().setSenderId(getServerContext().getServerId());
 	}
 }

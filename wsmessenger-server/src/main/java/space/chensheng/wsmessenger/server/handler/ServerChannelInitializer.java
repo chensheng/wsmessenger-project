@@ -24,12 +24,12 @@ public class ServerChannelInitializer extends ChannelInitializer<Channel>{
 	private ChannelHandler clientInfoResolveHandler;
 	
 	public ServerChannelInitializer(ServerContext serverContext, NettyServer server, 
-			TaskExecutor taskExecutor, Messenger<WsMessage<?>> messenger) {
+			TaskExecutor taskExecutor, Messenger<WsMessage> messenger) {
 		this.serverContext = serverContext;
 		
 		wsMessageHandler = new WsMessageHandler(taskExecutor, messenger);
 		handshakeCompletedHandler = new HandshakeCompletedHandler(server);
-		clientInfoResolveHandler = new ClientInfoResolveHandler();
+		clientInfoResolveHandler = new ClientInfoResolveHandler(server);
 	}
 
 	@Override

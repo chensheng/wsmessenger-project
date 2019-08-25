@@ -1,16 +1,15 @@
 package space.chensheng.wsmessenger.message.sysmsg;
 
-import space.chensheng.wsmessenger.message.body.StringBody;
 import space.chensheng.wsmessenger.message.component.WsMessage;
 
-public class ClientRegistryMessage extends WsMessage<StringBody> {
+public class ClientRegistryMessage extends WsMessage {
+    private String clientId;
 
-	public ClientRegistryMessage() {
-		this(null);
-	}
-	
-	public ClientRegistryMessage(String clientId) {
-		super(new StringBody(clientId));
-	}
+    public String getClientId() {
+        return clientId;
+    }
 
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 }

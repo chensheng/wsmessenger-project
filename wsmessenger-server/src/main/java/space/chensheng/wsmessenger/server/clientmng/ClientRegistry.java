@@ -1,17 +1,18 @@
 package space.chensheng.wsmessenger.server.clientmng;
 
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.ImmediateEventExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import space.chensheng.wsmessenger.common.util.JsonMapper;
 import space.chensheng.wsmessenger.common.util.RandomUtil;
 import space.chensheng.wsmessenger.server.util.ServerConstants;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientRegistry {
 	private static final Logger logger = LoggerFactory.getLogger(ClientRegistry.class);
@@ -39,12 +40,13 @@ public class ClientRegistry {
 		return clients.get(clientId);
 	}
 	
-	public boolean register(String clientId, Channel channel) {
-		if (clientId != null && channel != null) {
+	public boolean register(ClientInfo clientInfo, Channel channel) {
+		if (clientInfo != null && clientInfo.getClientId() != null && channel != null) {
+		    String clientId = clientInfo.getClientId();
 			channel.attr(ServerConstants.ATTR_CLIENT_ID).set(clientId);
 			clients.put(clientId, channel);
 			clientGroup.add(channel);
-			logger.info("success to register client {}", clientId);
+			logger.info("success to register client {}", JsonMapper.nonEmptyMapper().toJson(clientInfo));
 			return true;
 		}
 
@@ -105,9 +107,10 @@ public class ClientRegistry {
 			return null;
 		}
 		
-		Long connTime = channel.attr(ServerConstants.ATTR_CLIENT_CONN_TIME).get();
+		Long clientConnTime = channel.attr(ServerConstants.ATTR_CLIENT_CONN_TIME).get();
 		String clientId = channel.attr(ServerConstants.ATTR_CLIENT_ID).get();
 		String clientIp = channel.attr(ServerConstants.ATTR_CLIENT_IP).get();
+		Map<String, String> clientHeaders = channel.attr(ServerConstants.ATTR_CLIENT_HEADERS).get();
 		
 		if (clientId == null) {
 			logger.error("fail to resolve client info, cause clientId of channel is null.");
@@ -116,8 +119,9 @@ public class ClientRegistry {
 		
 		ClientInfo result = new ClientInfo();
 		result.setClientId(clientId);
-		result.setConnTime(connTime != null ? connTime : 0l);
+		result.setClientConnTime(clientConnTime);
 		result.setClientIp(clientIp);
+		result.setClientHeaders(clientHeaders);
 		return result;
 	}
 }

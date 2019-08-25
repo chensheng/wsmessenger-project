@@ -6,25 +6,25 @@ import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.message.sysmsg.ResponseMessage;
 import space.chensheng.wsmessenger.server.component.ServerContext;
 
-public class ServerWaitingMessageProcessor extends WaitingMessageProcessor<WsMessage<?>, ResponseMessage, ServerContext>{
+public class ServerWaitingMessageProcessor extends WaitingMessageProcessor<WsMessage, ResponseMessage, ServerContext>{
 
 	ServerWaitingMessageProcessor(ServerContext messengerContext, TaskExecutor taskExecutor) {
 		super(messengerContext, taskExecutor);
 	}
 
 	@Override
-	protected long resolveMessageId(WsMessage<?> message) {
-		return message.header().getMessageId();
+	protected long resolveMessageId(WsMessage message) {
+		return message.getHeader().getMessageId();
 	}
 
 	@Override
 	protected long resolverRespMessageId(ResponseMessage respMsg) {
-		return respMsg.body().getRespMessageId();
+		return respMsg.getRespMessageId();
 	}
 
 	@Override
 	protected boolean isRespMessageSuccess(ResponseMessage respMsg) {
-		return respMsg.body().isSuccess();
+		return respMsg.isSuccess();
 	}
 
 }

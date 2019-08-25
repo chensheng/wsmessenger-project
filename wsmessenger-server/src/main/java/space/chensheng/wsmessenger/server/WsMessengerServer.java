@@ -7,6 +7,7 @@ import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.message.sysmsg.ResponseMessage;
 import space.chensheng.wsmessenger.server.clientmng.ClientInfo;
 import space.chensheng.wsmessenger.server.clientmng.ClientRegistry;
+import space.chensheng.wsmessenger.server.clientmng.ClientValidator;
 import space.chensheng.wsmessenger.server.component.ServerContext;
 import space.chensheng.wsmessenger.server.listener.ServerLifecycleListener;
 import space.chensheng.wsmessenger.server.listener.ServerMessageListener;
@@ -18,9 +19,11 @@ import java.util.List;
  * @author sheng.chen
  */
 public class WsMessengerServer extends MessengerServer { 
-	private MessageListenerManager<ServerMessageListener<?>, WsMessage<?>> msgListenerMgr = new MessageListenerManager<ServerMessageListener<?>, WsMessage<?>>();
+	private MessageListenerManager<ServerMessageListener<?>, WsMessage> msgListenerMgr = new MessageListenerManager<ServerMessageListener<?>, WsMessage>();
 
 	private LifecycleListenerManager<ServerLifecycleListener> lifecycleListenerMgr = new LifecycleListenerManager<ServerLifecycleListener>();
+
+	private ClientValidator clientValidator;
 	
 	WsMessengerServer() {
 	}
@@ -30,7 +33,7 @@ public class WsMessengerServer extends MessengerServer {
     }
 	
 	@Override
-	public void onMessage(WsMessage<?> message, String senderId) {
+	public void onMessage(WsMessage message, String senderId) {
 		Channel channel = ClientRegistry.getInstance().findClient(senderId);
 		ClientInfo clientInfo = ClientRegistry.resolveClientInfo(channel);
 		if (clientInfo == null) {
@@ -78,8 +81,22 @@ public class WsMessengerServer extends MessengerServer {
 			}
 		}
 	}
-	
-	void addMessageListener(ServerMessageListener<?> listener) {
+
+    @Override
+    public boolean needToValidateClient() {
+        return clientValidator != null;
+    }
+
+    @Override
+    public boolean validateClient(ClientInfo clientInfo) {
+	    if (clientValidator == null) {
+	        return true;
+        }
+
+        return clientValidator.validate(clientInfo);
+    }
+
+    void addMessageListener(ServerMessageListener<?> listener) {
 		msgListenerMgr.add(listener);
 	}
 	
@@ -94,10 +111,16 @@ public class WsMessengerServer extends MessengerServer {
 	void addLifecycleListeners(List<ServerLifecycleListener> listeners) {
 		lifecycleListenerMgr.add(listeners);
 	}
+
+	void setClientValidator(ClientValidator clientValidator) {
+	    this.clientValidator = clientValidator;
+    }
 	
-	private void sendResponseIfNecessary(WsMessage<?> message, ClientInfo clientInfo) {
-		if (message.header().isNeedResponse()) {
-			ResponseMessage respMsg = new ResponseMessage(message.header().getMessageId(), true);
+	private void sendResponseIfNecessary(WsMessage message, ClientInfo clientInfo) {
+		if (message.getHeader().isNeedResponse()) {
+			ResponseMessage respMsg = new ResponseMessage();
+			respMsg.setRespMessageId(message.getHeader().getMessageId());
+			respMsg.setSuccess(true);
 			this.sendMessage(respMsg, clientInfo.getClientId());
 		}
 	}

@@ -6,10 +6,10 @@ import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.server.MessengerServer;
 import space.chensheng.wsmessenger.server.clientmng.ClientInfo;
 
-public abstract class ServerMessageListener<T extends WsMessage<?>> implements MessageListener {
+public abstract class ServerMessageListener<T extends WsMessage> implements MessageListener {
 	
 	@SuppressWarnings("unchecked")
-	public void handleMessage(WsMessage<?> message, ClientInfo clientInfo, MessengerServer server) {
+	public void handleMessage(WsMessage message, ClientInfo clientInfo, MessengerServer server) {
 		this.onMessage((T) message, clientInfo, server);
 	}
 	

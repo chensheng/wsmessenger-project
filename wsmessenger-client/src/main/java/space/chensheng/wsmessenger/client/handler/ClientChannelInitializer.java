@@ -1,8 +1,5 @@
 package space.chensheng.wsmessenger.client.handler;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
@@ -15,7 +12,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-
 import space.chensheng.wsmessenger.client.NettyClient;
 import space.chensheng.wsmessenger.client.component.ClientContext;
 import space.chensheng.wsmessenger.client.component.ClientContextable;
@@ -24,16 +20,20 @@ import space.chensheng.wsmessenger.common.executor.TaskExecutor;
 import space.chensheng.wsmessenger.common.util.WsMessengerConstants;
 import space.chensheng.wsmessenger.message.component.WsMessage;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
+
 public class ClientChannelInitializer extends ChannelInitializer<Channel> implements ClientContextable {
 	private ClientContext clientContext;
 	
 	private NettyClient nettyClient;
 	
-	private Messenger<WsMessage<?>> messenger;
+	private Messenger<WsMessage> messenger;
 	
 	private TaskExecutor taskExecutor;
 	
-	public ClientChannelInitializer(ClientContext clientContext, NettyClient nettyClient, Messenger<WsMessage<?>> messenger, TaskExecutor taskExecutor) {
+	public ClientChannelInitializer(ClientContext clientContext, NettyClient nettyClient, Messenger<WsMessage> messenger, TaskExecutor taskExecutor) {
 	    if (clientContext == null) {
 	    	throw new NullPointerException("clientContext may not be null");
 	    }
@@ -90,7 +90,12 @@ public class ClientChannelInitializer extends ChannelInitializer<Channel> implem
 		}
 		
 		HttpHeaders customHeaders = new DefaultHttpHeaders();
-		customHeaders.add(WsMessengerConstants.CUSTOM_HEADER_CLIENT_ID, getClientContext().getClientId());
+		if (clientContext.getClientHeaders() != null) {
+			for (Map.Entry<String, String> entry : clientContext.getClientHeaders().entrySet()) {
+			    customHeaders.add(entry.getKey(), entry.getValue());
+            }
+		}
+        customHeaders.add(WsMessengerConstants.CUSTOM_HEADER_CLIENT_ID, getClientContext().getClientId());
 		
 		WebSocketClientProtocolHandler wsHandler = new PingableWebSocketClientProtocolHandler(serverUri, WebSocketVersion.V13, 
 				null, false, customHeaders, clientContext.getMaxFramePayloadLen());

@@ -1,26 +1,20 @@
 package space.chensheng.wsmessenger.server.reliable;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import space.chensheng.wsmessenger.common.component.Messenger;
 import space.chensheng.wsmessenger.common.executor.TaskExecutor;
 import space.chensheng.wsmessenger.common.reliable.PendingMessageProcessor;
 import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.server.component.ServerContext;
 
-public class ServerPendingMessageProcessor implements PendingMessageProcessor<WsMessage<?>> {
+import java.util.concurrent.*;
+import java.util.function.Function;
+
+public class ServerPendingMessageProcessor implements PendingMessageProcessor<WsMessage> {
 	private static final Logger logger = LoggerFactory.getLogger(ServerPendingMessageProcessor.class);
 	
-	private ConcurrentHashMap<String, ConcurrentLinkedQueue<WsMessage<?>>> pendingMsgMap = new ConcurrentHashMap<String, ConcurrentLinkedQueue<WsMessage<?>>>();
+	private ConcurrentHashMap<String, ConcurrentLinkedQueue<WsMessage>> pendingMsgMap = new ConcurrentHashMap<String, ConcurrentLinkedQueue<WsMessage>>();
 	
 	private DelayQueue<TimeoutInfo> timeoutInfoQueue = new DelayQueue<TimeoutInfo>();
 	
@@ -30,11 +24,11 @@ public class ServerPendingMessageProcessor implements PendingMessageProcessor<Ws
 	
 	private ServerContext serverContext;
 	
-	private Messenger<WsMessage<?>> messenger;
+	private Messenger<WsMessage> messenger;
 	
 	private TaskExecutor taskExecutor;
 	
-	ServerPendingMessageProcessor(ServerContext serverContext, Messenger<WsMessage<?>> messenger, TaskExecutor taskExecutor) {
+	ServerPendingMessageProcessor(ServerContext serverContext, Messenger<WsMessage> messenger, TaskExecutor taskExecutor) {
 		if (serverContext == null) {
 			throw new NullPointerException("serverContext may not be null");
 		}
@@ -59,11 +53,11 @@ public class ServerPendingMessageProcessor implements PendingMessageProcessor<Ws
 		}
 		
 		String pendingId = createPendingId(receiverId);
-		ConcurrentLinkedQueue<WsMessage<?>> pendingMsgQueue = pendingMsgMap.remove(pendingId);
+		ConcurrentLinkedQueue<WsMessage> pendingMsgQueue = pendingMsgMap.remove(pendingId);
 		if (pendingMsgQueue != null && pendingMsgQueue.size() > 0) {
 			logger.info("start to deliver pending message to client {}", pendingId);
 			int msgCount = pendingMsgQueue.size();
-			WsMessage<?> pendingMsg = pendingMsgQueue.poll();
+			WsMessage pendingMsg = pendingMsgQueue.poll();
 			while (pendingMsg != null) {
 				messenger.sendMessage(pendingMsg, receiverId);
 				pendingMsg = pendingMsgQueue.poll();
@@ -74,7 +68,7 @@ public class ServerPendingMessageProcessor implements PendingMessageProcessor<Ws
 	}
 
 	@Override
-	public void addPendingMessage(String receiverId, WsMessage<?> message) {
+	public void addPendingMessage(String receiverId, WsMessage message) {
 		if (receiverId == null || message == null) {
 			return;
 		}
@@ -98,18 +92,18 @@ public class ServerPendingMessageProcessor implements PendingMessageProcessor<Ws
 		return clientId;
 	}
 	
-	private void doAddMessage(String pendingId, WsMessage<?> msg) {
+	private void doAddMessage(String pendingId, WsMessage msg) {
 		startTimeoutCheckerInNeed();
-		ConcurrentLinkedQueue<WsMessage<?>> pendingMsgQueue = pendingMsgMap.computeIfAbsent(pendingId, new Function<String, ConcurrentLinkedQueue<WsMessage<?>>>() {
+		ConcurrentLinkedQueue<WsMessage> pendingMsgQueue = pendingMsgMap.computeIfAbsent(pendingId, new Function<String, ConcurrentLinkedQueue<WsMessage>>() {
 
 			@Override
-			public ConcurrentLinkedQueue<WsMessage<?>> apply(String t) {
+			public ConcurrentLinkedQueue<WsMessage> apply(String t) {
 				if (pendingMsgMap.size() >= serverContext.getPendingClientMaxCount()) {
 					logger.error("pending clients exceed {}, new pending client will not be accepted.", serverContext.getPendingClientMaxCount());
 					return null;
 				}
 				timeoutInfoQueue.put(new TimeoutInfo(pendingId));
-				return new ConcurrentLinkedQueue<WsMessage<?>>();
+				return new ConcurrentLinkedQueue<WsMessage>();
 			}
 			
 		});
@@ -156,7 +150,7 @@ public class ServerPendingMessageProcessor implements PendingMessageProcessor<Ws
 			while (times < BATCH_SIZE) {
 				ti = timeoutInfoQueue.poll();
 				if (ti != null) {
-					ConcurrentLinkedQueue<WsMessage<?>> timeoutMsgQueue = pendingMsgMap.remove(ti.getPendingId());
+					ConcurrentLinkedQueue<WsMessage> timeoutMsgQueue = pendingMsgMap.remove(ti.getPendingId());
 					if (timeoutMsgQueue != null) {
 						timeoutMsgQueue.clear();
 						timeoutMsgQueue = null;

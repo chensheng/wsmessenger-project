@@ -7,9 +7,9 @@ import space.chensheng.wsmessenger.common.reliable.ReliableAssembler;
 import space.chensheng.wsmessenger.message.component.WsMessage;
 import space.chensheng.wsmessenger.message.sysmsg.ResponseMessage;
 
-public class ServerReliableAssembler extends ReliableAssembler<WsMessage<?>, ResponseMessage, ServerContext> {
+public class ServerReliableAssembler extends ReliableAssembler<WsMessage, ResponseMessage, ServerContext> {
 	
-	public ServerReliableAssembler(ServerContext serverContext, Messenger<WsMessage<?>> messenger, TaskExecutor taskExecutor) {
+	public ServerReliableAssembler(ServerContext serverContext, Messenger<WsMessage> messenger, TaskExecutor taskExecutor) {
 		super(new ServerWaitingMessageProcessor(serverContext, taskExecutor), new ServerPendingMessageProcessor(serverContext, messenger, taskExecutor));
 	}
 }
