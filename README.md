@@ -19,7 +19,7 @@ For server side, you should import `wsmessenger-server`.
 <dependency>
   <groupId>space.chensheng.wsmessenger</groupId>
   <artifactId>wsmessenger-server</artifactId>
-  <version>1.0.0</version>
+  <version>1.5.0</version>
 </dependency>
 ```
 
@@ -28,7 +28,7 @@ For client side, you should import `wsmessenger-client`.
 <dependency>
   <groupId>space.chensheng.wsmessenger</groupId>
   <artifactId>wsmessenger-client</artifactId>
-  <version>1.0.0</version>
+  <version>1.5.0</version>
 </dependency>
 ```
 
@@ -37,7 +37,7 @@ To implement customized messages, you should import `wsmessenger-message`
 <dependency>
   <groupId>space.chensheng.wsmessenger</groupId>
   <artifactId>wsmessenger-message</artifactId>
-  <version>1.0.0</version>
+  <version>1.5.0</version>
 </dependency>
 ```
 
@@ -88,13 +88,15 @@ Server and client can comunicate with each other by sending message.
 
 In server side, `WsMessengerServer` is used to send message.
 ```java
-TextMessage message = new TextMessage("This is a text message sent to client!");
+TextMessage message = new TextMessage();
+message.setContent("This is a text message sent to client!")
 server.sendMessage(message, clientId);
 ```
 
 In client side, `WsMessengerClient` is used to send message.
 ```java
-TextMessage message = new TextMessage("This is a text message sent to server!");
+TextMessage message = new TextMessage();
+message.setContent("This is a text message sent to server!")
 client.sendMessage(message, null);
 ```
 
@@ -125,52 +127,38 @@ sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId)|Send mes
 sendWaitingMessageReliablyWithRetry(WsMessage message, String serverId, int retry)|Send message to specific server, and waiting for server's response. Retry specific times until receiving success response. Add message to pending queue when server is unavailable.
 
 ### Implement customized message
-Developer can implement customized message, and send it between server and client. To implement a customized message, you should use `WsMessage` and `MessageBody`. The following is an example:
+Developer can implement customized message, and send it between server and client. To implement a customized message, you should extend `WsMessage`. The following is an example:
 
-Firstly, implement a customized message body.
 ```java
-import space.chensheng.wsmessenger.message.component.MessageBody;
+import space.chensheng.wsmessenger.message.component.WsMessage;
 
-public class UserInfoMessageBody extends MessageBody {
+public class UserInfoMessage extends WsMessage {
     private int userId;
     
     private String userName;
-    
-    public UserInfoMessageBody(int userId, String userName) {
-        this.userId = userId;
-	this.userName = userName;
-    }
     
     public int getUserId() {
         return userId;
     }
     
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+    
     public String getUserName() {
         return userName;
     }
-}
-```
-
-Secondly, implement a customized message with the customized message body.
-```java
-import space.chensheng.wsmessenger.message.component.WsMessage;
-import your.package.to.UserInfoMessageBody;
-
-public class UserInfoMessage extends WsMessage<UserInfoMessageBody> {
-    //A non-argument constructor is required.
-    public UserInfoMessage() {
-        this(0, null);
-    }
     
-    public UserInfoMessage(int userId, String userName) {
-        super(new UserInfoMessageBody(userId, userName));
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
 ```
 
-Finally, send the customized message.
 ```java
-UserInfoMessage message = new UserInfoMessage(123, "wsmessenger");
+UserInfoMessage message = new UserInfoMessage();
+message.setUserId(123);
+message.setUserName("wsmessenger");
 client.sendMessage(message, null);
 ```
 
@@ -183,9 +171,10 @@ public class MyTextMessageListener extends ServerMessageListener<TextMessage> {
     
     @Override
     protected void onMessage(TextMessage message, ClientInfo clientInfo, MessengerServer server) {
-        String replyContent = "Hello client, i have received your text message " + message.body().getContent();
-        TextMessage relyMessage = new TextMessage(replyContent);
-	server.sendWaitingMessageReliablyWithRetry(replyMessage, clientInfo.getClientId());	
+        String replyContent = "Hello client, i have received your text message " + message.getContent();
+        TextMessage relyMessage = new TextMessage();
+        replyMessage.setContent(replyContent);
+	    server.sendWaitingMessageReliablyWithRetry(replyMessage, clientInfo.getClientId());	
     }
     
 }
@@ -197,16 +186,17 @@ public class MyTextMessageListener extends ClientMessageListener<TextMessage> {
 
     @Override
     protected void onMessage(TextMessage message, MessengerClient client) {
-        String replyContent = "Hello server, i have received your text message " + message.body().getContent();
-        TextMessage relyMessage = new TextMessage(replyContent);
-	client.sendWaitingMessageReliablyWithRetry(replyMessage, null);
+        String replyContent = "Hello server, i have received your text message " + message.getContent();
+        TextMessage relyMessage = new TextMessage();
+        replyMessage.setContent(replyContent);
+	    client.sendWaitingMessageReliablyWithRetry(replyMessage, null);
     }
 
 }
 ```
 
 ### Listen lifecycle
-Lifecycle listeners can be added to listen server and client's lifecycles. Developer should implement your own `LifecycleListener`.
+Lifecycle listeners can be added to listen server and client's lifecycle. Developer should implement your own `LifecycleListener`.
 
 In server side, `ServerLifecycleListener` is used to implement. The following is an example:
 ```java
